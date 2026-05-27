@@ -58,7 +58,7 @@ identified injected regressions with no labelled training data.
 
 \## Usage
 
-
+```bash
 
 pip install -r requirements.txt
 
@@ -68,7 +68,7 @@ python src/analyze.py
 
 python src/anomaly.py
 
-
+```
 
 \## Results
 
