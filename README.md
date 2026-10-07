@@ -9,17 +9,21 @@ A Python pipeline for ingesting CPU performance counter data, visualising microa
 - Identifies correlations between cache/branch behaviour and IPC
 - Applies Isolation Forest anomaly detection to flag runs with statistically unusual performance signatures
 
-## Key findings from synthetic dataset (200 runs, 5 workloads)
+## Measured results (synthetic dataset: 200 runs, 5 workloads)
 
-| Workload | Mean IPC | Mean Cache Miss Rate | Characteristic |
-|---|---|---|---|
-| matrix_mul | ~2.8 | ~2% | ALU-bound, cache-friendly |
-| linked_list | ~0.6 | ~45% | Memory-bound, pointer chasing |
-| fft | ~2.1 | ~8% | Compute + moderate memory |
-| memcpy | ~1.2 | ~25% | Bandwidth-bound |
-| sort | ~1.8 | ~12% | Branch-heavy |
+| Workload | Runs | Mean IPC | Mean Cache Miss Rate | Characteristic |
+| --- | --- | --- | --- | --- |
+| matrix_mul | 46 | 2.79 | 2.1% | ALU-bound, cache-friendly |
+| fft | 35 | 2.24 | 8.8% | Compute + moderate memory |
+| sort | 45 | 1.84 | 11.8% | Branch-heavy |
+| memcpy | 39 | 1.27 | 27.1% | Bandwidth-bound |
+| linked_list | 35 | 0.69 | 52.0% | Memory-bound, pointer chasing |
 
-Anomaly detection (Isolation Forest, contamination=5%) correctly identified injected regressions with no labelled training data.
+## Anomaly detection evaluation
+
+Isolation Forest (contamination=5%) flagged 10 of 11 injected anomalies with 0 false positives (precision 1.00, recall 0.91), using no labels for training. The one missed run is a matrix_mul run whose IPC looks normal next to other workloads, because one model is fit across all workloads.
+
+Notes: the data is synthetic, `contamination` was set equal to the injection rate, and the alert threshold is the 5th percentile of the anomaly scores (the same cut as `contamination`).
 
 ## Usage
 
