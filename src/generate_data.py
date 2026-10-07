@@ -30,7 +30,9 @@ for i in range(n):
         cache_miss = np.random.normal(0.12, 0.03)
         branch_miss = np.random.normal(0.15, 0.02)
 
+    injected = False
     if np.random.random() < 0.05:
+        injected = True
         ipc *= np.random.choice([0.3, 2.5])
         cache_miss *= np.random.choice([5.0, 0.1])
 
@@ -41,7 +43,8 @@ for i in range(n):
         'cache_miss_rate': round(min(1.0, max(0.001, cache_miss)), 4),
         'branch_miss_rate': round(min(1.0, max(0.001, branch_miss)), 4),
         'cycles': int(np.random.uniform(1e6, 1e8)),
-        'instructions': 0
+        'instructions': 0,
+        'injected': injected
     })
 
 df = pd.DataFrame(data)
