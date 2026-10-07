@@ -19,6 +19,12 @@ df['is_anomaly'] = df['anomaly_score'] == -1
 
 anomalies = df[df['is_anomaly']]
 normal = df[~df['is_anomaly']]
+# Evaluation against the injected ground truth (synthetic data)
+tp = int((df['injected'] & df['is_anomaly']).sum())
+fp = int((~df['injected'] & df['is_anomaly']).sum())
+fn = int((df['injected'] & ~df['is_anomaly']).sum())
+print(f"\nInjected: {int(df['injected'].sum())} | TP={tp} FP={fp} FN={fn}")
+print(f"Precision={tp/(tp+fp):.2f} Recall={tp/(tp+fn):.2f}")
 
 print(f"Total runs: {len(df)}")
 print(f"Anomalies detected: {len(anomalies)} ({100*len(anomalies)/len(df):.1f}%)")
